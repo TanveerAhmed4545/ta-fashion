@@ -1,21 +1,51 @@
 import Lottie from "lottie-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import signInAnimation from "../../assets/animation/signInAnimation.json";
+import { AuthContext } from "../../providers/AuthProvider";
 const Login = () => {
   // show password
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn, googleLogin } = useContext(AuthContext);
 
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    signIn(data.email, data.password)
+      .then((result) => {
+        result.user && toast.success("Login Successfully");
+
+        // navigate after login
+        navigate(location?.state ? location.state : "/");
+      })
+      .catch((error) => {
+        error && toast.error("Login Error, email or password incorrect");
+      });
+  };
+
+  const handleSocialLogin = (socialProvider) => {
+    socialProvider()
+      .then((result) => {
+        // console.log(result.user);
+        result.user && toast.success("Login Successfully");
+        // social login navigate
+        navigate(location?.state ? location.state : "/");
+      })
+      .then((error) => {
+        // console.log(error);
+        error && toast.error("Login Error");
+      });
+  };
 
   return (
     <div className="hero min-h-screen ">
@@ -77,7 +107,7 @@ const Login = () => {
           </form>
           <div className="px-8 pt-6">
             <button
-              //  onClick={() => handleSocialLogin(googleLogin)}
+              onClick={() => handleSocialLogin(googleLogin)}
               className="btn bg-blue-600 border-none text-white w-full"
             >
               <FaGoogle></FaGoogle>

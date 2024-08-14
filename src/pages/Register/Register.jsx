@@ -1,22 +1,63 @@
+import { updateProfile } from "firebase/auth";
 import Lottie from "lottie-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signUpAnimation from "../../assets/animation/signUpAnimation.json";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const Register = () => {
   // show password
   const [showPassword, setShowPassword] = useState(false);
-
+  const { createUser, setReload } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    // console.log(data)
+
+    if (data.password.length < 6) {
+      toast.error("Password should be at least 6 characters or longer");
+      return;
+    } else if (!/(?=.*[A-Z])(?=.*[a-z])/.test(data.password)) {
+      toast.error(
+        "Your password should have at least one Upper case and one lower case characters."
+      );
+      return;
+    }
+
+    //  console.log(data)
+    createUser(data.email, data.password)
+      .then((result) => {
+        // console.log(result.user);
+        result.user && toast.success("Successfully Register");
+
+        updateProfile(result.user, {
+          displayName: data.name,
+          photoURL: data.photo,
+        })
+          .then(() => {
+            // console.log("update");
+            setReload(true);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        navigate("/");
+      })
+      .catch((error) => {
+        error && toast.error("Error , not registered");
+      });
+  };
 
   return (
     <div className="hero min-h-screen ">

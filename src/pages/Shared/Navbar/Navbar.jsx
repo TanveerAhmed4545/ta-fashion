@@ -1,6 +1,24 @@
+import { useContext } from "react";
+import toast from "react-hot-toast";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../../../../public/fa.png";
+import { Tooltip } from "react-tooltip";
+import demoUserPic from "../../../assets/images/demoUser.png";
+import logo from "../../../assets/images/fa.png";
+import { AuthContext } from "../../../providers/AuthProvider";
+
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const handleSignOut = () => {
+    logOut()
+      .then((result) => {
+        console.log(result);
+        toast.success("Logout Completed");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error");
+      });
+  };
   const links = (
     <>
       <li>
@@ -17,34 +35,38 @@ const Navbar = () => {
           Home
         </NavLink>
       </li>
-      <li>
-        <NavLink
-          to="/login"
-          className={({ isActive, isPending }) =>
-            isActive
-              ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
-              : isPending
-              ? "pending"
-              : "mr-3  font-semibold"
-          }
-        >
-          Login
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/register"
-          className={({ isActive, isPending }) =>
-            isActive
-              ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
-              : isPending
-              ? "pending"
-              : "mr-3  font-semibold"
-          }
-        >
-          Register
-        </NavLink>
-      </li>
+      {!user && (
+        <>
+          <li>
+            <NavLink
+              to="/login"
+              className={({ isActive, isPending }) =>
+                isActive
+                  ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
+                  : isPending
+                  ? "pending"
+                  : "mr-3  font-semibold"
+              }
+            >
+              Login
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/register"
+              className={({ isActive, isPending }) =>
+                isActive
+                  ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
+                  : isPending
+                  ? "pending"
+                  : "mr-3  font-semibold"
+              }
+            >
+              Register
+            </NavLink>
+          </li>
+        </>
+      )}
     </>
   );
   return (
@@ -85,7 +107,40 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Button</a>
+          <div>
+            {user && (
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle avatar"
+                >
+                  <div className="w-10 rounded-full">
+                    <Tooltip id="my-tooltip" />
+                    <img
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={user?.displayName}
+                      data-tooltip-place="top"
+                      src={user?.photoURL ? user.photoURL : demoUserPic}
+                    />
+                  </div>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm z-50 dropdown-content mt-3  p-2 shadow bg-base-100 rounded-box w-52"
+                >
+                  <li>
+                    <button
+                      className="btn font-semibold bg-[#0EB1EA]"
+                      onClick={handleSignOut}
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
