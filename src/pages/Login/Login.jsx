@@ -6,6 +6,7 @@ import { IoMdEye } from "react-icons/io";
 import { Link } from "react-router-dom";
 import signInAnimation from "../../assets/animation/signInAnimation.json";
 const Login = () => {
+  // show password
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -29,7 +30,7 @@ const Login = () => {
             />
           </div>
         </div>
-        <div className="card rounded-tr-none rounded-bl-none shrink-0 w-full max-w-md shadow-2xl bg-base-100">
+        <div className="card  shrink-0 w-full max-w-md shadow-2xl bg-base-100">
           <form className="card-body pb-0" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
               <label className="label">

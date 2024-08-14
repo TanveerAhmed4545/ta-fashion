@@ -8,7 +8,7 @@ const Navbar = () => {
           to="/"
           className={({ isActive, isPending }) =>
             isActive
-              ? "bg-none border bg-[#4692FF] text-white font-semibold border-[#4692FF] mr-3"
+              ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
               : isPending
               ? "pending"
               : "mr-3  font-semibold"
@@ -22,7 +22,7 @@ const Navbar = () => {
           to="/login"
           className={({ isActive, isPending }) =>
             isActive
-              ? "bg-none border bg-[#4692FF] text-white font-semibold border-[#4692FF] mr-3"
+              ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
               : isPending
               ? "pending"
               : "mr-3  font-semibold"
@@ -36,7 +36,7 @@ const Navbar = () => {
           to="/register"
           className={({ isActive, isPending }) =>
             isActive
-              ? "bg-none border bg-[#4692FF] text-white font-semibold border-[#4692FF] mr-3"
+              ? "bg-none border bg-[#0EB1EA] text-white font-semibold border-[#0EB1EA] mr-3"
               : isPending
               ? "pending"
               : "mr-3  font-semibold"
