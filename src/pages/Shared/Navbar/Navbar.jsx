@@ -17,6 +17,34 @@ const Navbar = () => {
           Home
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/login"
+          className={({ isActive, isPending }) =>
+            isActive
+              ? "bg-none border bg-[#4692FF] text-white font-semibold border-[#4692FF] mr-3"
+              : isPending
+              ? "pending"
+              : "mr-3  font-semibold"
+          }
+        >
+          Login
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/register"
+          className={({ isActive, isPending }) =>
+            isActive
+              ? "bg-none border bg-[#4692FF] text-white font-semibold border-[#4692FF] mr-3"
+              : isPending
+              ? "pending"
+              : "mr-3  font-semibold"
+          }
+        >
+          Register
+        </NavLink>
+      </li>
     </>
   );
   return (
