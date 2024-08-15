@@ -6,19 +6,23 @@ import ProductsCard from "./ProductsCard/ProductsCard";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  console.log(search);
+  const [priceRange, setPriceRange] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
   const {
     data: products = [],
     // isLoading,
     // error,
   } = useQuery({
-    queryKey: ["products", search, currentPage],
+    queryKey: ["products", search, currentPage, priceRange],
     queryFn: async () => {
       const res = await axios.get(
         `http://localhost:5000/Products?page=${currentPage}`,
         {
           params: {
             search,
+            priceRange,
           },
         }
       );
@@ -28,7 +32,7 @@ const Home = () => {
   // console.log(products);
 
   const { data: totalCount = {} } = useQuery({
-    queryKey: ["userCount"],
+    queryKey: ["productCount"],
     queryFn: async () => {
       const res = await axios.get("http://localhost:5000/productCount");
       return res.data;
@@ -40,7 +44,6 @@ const Home = () => {
 
   const numberOfPages = Math.ceil(count / itemsPerPage);
   const pages = numberOfPages > 0 ? [...Array(numberOfPages).keys()] : [];
-  // console.log(count,itemsPerPage,numberOfPages,pages);
 
   const handlePrevPage = () => {
     if (currentPage > 0) {
@@ -51,6 +54,14 @@ const Home = () => {
   const handleNextPage = () => {
     if (currentPage < pages.length - 1) {
       setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleFilter = () => {
+    if (minPrice && maxPrice) {
+      setPriceRange(`${minPrice}-${maxPrice}`);
+    } else {
+      setPriceRange(""); // Reset price range if no min or max
     }
   };
 
@@ -73,6 +84,32 @@ const Home = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+
+      {/* price */}
+      <div className="flex flex-col lg:flex-row lg:justify-center lg:space-x-2 px-4 md:px-20 mb-4">
+        <input
+          type="number"
+          placeholder="Min Price"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 mb-2 lg:mb-0"
+        />
+        <input
+          type="number"
+          placeholder="Max Price"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 mb-2 lg:mb-0"
+        />
+        <button
+          onClick={handleFilter}
+          className="bg-[#0EB1EA] rounded-md text-white px-4 py-2 hover:bg-[#0EB1EA]"
+        >
+          Filter
+        </button>
+      </div>
+
+      {/* products */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5 px-4">
         {products.map((product) => (
           <ProductsCard key={product._id} product={product}></ProductsCard>

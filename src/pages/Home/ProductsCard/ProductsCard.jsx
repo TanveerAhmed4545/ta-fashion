@@ -14,6 +14,7 @@ const ProductsCard = ({ product }) => {
     Price,
     Ratings,
     Category,
+    BrandName,
   } = product;
 
   // Format the CreationDateTime using Moment.js
@@ -43,6 +44,11 @@ const ProductsCard = ({ product }) => {
             </span>{" "}
             <span className="font-semibold">{Category}</span>
           </p>
+          <p className="flex items-center my-3">
+            <span className="font-semibold mr-2 text-lg ">Brand :</span>{" "}
+            <span className="font-semibold">{BrandName}</span>
+          </p>
+
           <div className="flex items-center justify-between">
             <p className="flex items-center gap-2 text-xs md:text-base font-semibold">
               <span>
