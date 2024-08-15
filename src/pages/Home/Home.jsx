@@ -9,13 +9,14 @@ const Home = () => {
   const [priceRange, setPriceRange] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [sortBy, setSortBy] = useState("");
 
   const {
     data: products = [],
     // isLoading,
     // error,
   } = useQuery({
-    queryKey: ["products", search, currentPage, priceRange],
+    queryKey: ["products", search, currentPage, priceRange, sortBy],
     queryFn: async () => {
       const res = await axios.get(
         `http://localhost:5000/Products?page=${currentPage}`,
@@ -23,6 +24,7 @@ const Home = () => {
           params: {
             search,
             priceRange,
+            sortBy,
           },
         }
       );
@@ -65,6 +67,11 @@ const Home = () => {
     }
   };
 
+  // Handle sorting change
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value); // Update sortBy state based on user's selection
+  };
+
   return (
     <div>
       <div className="text-center py-8 ">
@@ -83,6 +90,20 @@ const Home = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
+
+      {/* Sort By Dropdown */}
+      <div className="mb-4 px-4">
+        <select
+          onChange={handleSortChange}
+          value={sortBy}
+          className="select select-bordered w-full"
+        >
+          <option value="">Sort By</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="date-desc">Newest First</option>
+        </select>
       </div>
 
       {/* price */}
