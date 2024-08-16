@@ -26,7 +26,7 @@ const Home = () => {
     "Skirts",
     "Shorts",
   ];
-  const brandsData = ["Gucci", "Zara", "Nike", "Adidas", "Uniqlo", "Prada"];
+  const brandData = ["Gucci", "Zara", "Nike", "Adidas", "Uniqlo", "Prada"];
 
   const {
     data: products = [],
@@ -44,7 +44,7 @@ const Home = () => {
     ],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5000/Products?page=${currentPage}`,
+        `https://ta-fashion-server.vercel.app/Products?page=${currentPage}`,
         {
           params: {
             search,
@@ -63,7 +63,9 @@ const Home = () => {
   const { data: totalCount = {} } = useQuery({
     queryKey: ["productCount"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/productCount");
+      const res = await axios.get(
+        "https://ta-fashion-server.vercel.app/productCount"
+      );
       return res.data;
     },
   });
@@ -99,7 +101,7 @@ const Home = () => {
     setSortBy(e.target.value);
   };
 
-  // if (isLoading) return <div>Loading....</div>;
+  // if (isLoading) return <div className="text-6xl">Loading....</div>;
 
   return (
     <div>
@@ -128,21 +130,21 @@ const Home = () => {
         <div className="  w-full">
           <select
             onChange={(e) => setBrand(e.target.value)}
-            value={brandsData}
+            value={brand}
             className="select select-bordered w-full"
           >
             <option value="">Select Brand</option>
             <option value="">All Brands</option>
-            {brandsData.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
+            {brandData.map((b) => (
+              <option key={b} value={b}>
+                {b}
               </option>
             ))}
           </select>
         </div>
 
         {/* Category Filter */}
-        <div className="  w-full">
+        <div className="w-full">
           <select
             onChange={(e) => setCategory(e.target.value)}
             value={category}
