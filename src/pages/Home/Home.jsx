@@ -10,22 +10,22 @@ const Home = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortBy, setSortBy] = useState("");
-  // const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
 
-  // const categoriesData = [
-  //   "Jackets",
-  //   "Dresses",
-  //   "Pants",
-  //   "Activewear",
-  //   "Shirts",
-  //   "Sweaters",
-  //   "Accessories",
-  //   "Bags",
-  //   "Jeans",
-  //   "Skirts",
-  //   "Shorts",
-  // ];
+  const categoriesData = [
+    "Jackets",
+    "Dresses",
+    "Pants",
+    "Activewear",
+    "Shirts",
+    "Sweaters",
+    "Accessories",
+    "Bags",
+    "Jeans",
+    "Skirts",
+    "Shorts",
+  ];
   const brandsData = ["Gucci", "Zara", "Nike", "Adidas", "Uniqlo", "Prada"];
 
   const {
@@ -33,7 +33,15 @@ const Home = () => {
     // isLoading,
     // error,
   } = useQuery({
-    queryKey: ["products", search, currentPage, priceRange, sortBy, brand],
+    queryKey: [
+      "products",
+      search,
+      currentPage,
+      priceRange,
+      sortBy,
+      brand,
+      category,
+    ],
     queryFn: async () => {
       const res = await axios.get(
         `http://localhost:5000/Products?page=${currentPage}`,
@@ -43,6 +51,7 @@ const Home = () => {
             priceRange,
             sortBy,
             brand,
+            category,
           },
         }
       );
@@ -114,18 +123,18 @@ const Home = () => {
 
   return (
     <div>
-      <div className="text-center py-8 ">
+      <div className="text-center py-4 md:py-8 px-4">
         <h2 className=" text-2xl lg:text-4xl font-extrabold">
           Discover our Latest Fashion
         </h2>
-        <p className=" pt-6 w-full mx-auto lg:w-9/12">
+        <p className=" pt-3 md:pt-5 w-full mx-auto lg:w-9/12">
           Explore the latest in Fashion on our platform.{" "}
         </p>
       </div>
 
-      <div className="flex justify-between items-center flex-col md:flex-row ">
+      <div className="flex justify-between items-center gap-2 flex-col px-4 md:flex-row ">
         {/* search */}
-        <div className="my-3 px-4  w-full">
+        <div className="  w-full">
           <input
             className="input input-bordered  w-full"
             type="text"
@@ -136,7 +145,7 @@ const Home = () => {
         </div>
 
         {/* Brand Filter */}
-        <div className="mb-3 md:my-3 px-4 w-full">
+        <div className="  w-full">
           <select
             onChange={(e) => setBrand(e.target.value)}
             value={brandsData}
@@ -152,8 +161,25 @@ const Home = () => {
           </select>
         </div>
 
+        {/* Category Filter */}
+        <div className="  w-full">
+          <select
+            onChange={(e) => setCategory(e.target.value)}
+            value={category}
+            className="select select-bordered w-full"
+          >
+            <option value="">Select Category</option>
+            <option value="">Default Category</option>
+            {categoriesData.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Sort By Dropdown */}
-        <div className="mb-3 md:my-3 px-4  w-full">
+        <div className="mb-2 md:my-3   w-full">
           <select
             onChange={handleSortChange}
             value={sortBy}
@@ -167,28 +193,30 @@ const Home = () => {
         </div>
       </div>
 
-      {/* price */}
-      <div className="flex flex-col md:flex-row md:justify-center md:space-x-2 px-4 md:px-20 mb-4">
-        <input
-          type="number"
-          placeholder="Min Price"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-          className="input input-bordered rounded-md  mb-2 lg:mb-0"
-        />
-        <input
-          type="number"
-          placeholder="Max Price"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-          className="input input-bordered rounded-md  mb-2 lg:mb-0"
-        />
-        <button
-          onClick={handleFilter}
-          className="bg-[#0EB1EA] rounded-md text-white btn hover:bg-[#0eafeab3] border-none"
-        >
-          Filter
-        </button>
+      <div className="flex justify-between items-center flex-col md:flex-row ">
+        {/* price */}
+        <div className="flex flex-col md:flex-row md:justify-center md:space-x-2 px-4 mb-4 md:mb-0 w-full">
+          <input
+            type="number"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="input input-bordered rounded-md  mb-2 lg:mb-0"
+          />
+          <input
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="input input-bordered rounded-md  mb-2 lg:mb-0"
+          />
+          <button
+            onClick={handleFilter}
+            className="bg-[#0EB1EA] rounded-md text-white btn hover:bg-[#0eafeab3] border-none"
+          >
+            Filter
+          </button>
+        </div>
       </div>
 
       {/* products */}
