@@ -23,7 +23,7 @@ const ProductsCard = ({ product }) => {
   );
   return (
     <div>
-      <div className="card  p-4 bg-base-100 border-[#e7f6fd] border-2 hover:border-none hover:shadow-xl hover:shadow-[#e7f6fd] transition duration-300 ease-in-out">
+      <div className="card  h-full p-4 bg-base-100 border-[#e7f6fd] border-2 hover:border-none hover:shadow-xl hover:shadow-[#e7f6fd] transition duration-300 ease-in-out">
         <div className="relative">
           <figure>
             <img

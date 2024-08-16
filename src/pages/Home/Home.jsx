@@ -10,13 +10,30 @@ const Home = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortBy, setSortBy] = useState("");
+  // const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
+
+  // const categoriesData = [
+  //   "Jackets",
+  //   "Dresses",
+  //   "Pants",
+  //   "Activewear",
+  //   "Shirts",
+  //   "Sweaters",
+  //   "Accessories",
+  //   "Bags",
+  //   "Jeans",
+  //   "Skirts",
+  //   "Shorts",
+  // ];
+  const brandsData = ["Gucci", "Zara", "Nike", "Adidas", "Uniqlo", "Prada"];
 
   const {
     data: products = [],
     // isLoading,
     // error,
   } = useQuery({
-    queryKey: ["products", search, currentPage, priceRange, sortBy],
+    queryKey: ["products", search, currentPage, priceRange, sortBy, brand],
     queryFn: async () => {
       const res = await axios.get(
         `http://localhost:5000/Products?page=${currentPage}`,
@@ -25,6 +42,7 @@ const Home = () => {
             search,
             priceRange,
             sortBy,
+            brand,
           },
         }
       );
@@ -40,6 +58,26 @@ const Home = () => {
       return res.data;
     },
   });
+
+  // Fetch categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:5000/categories");
+      return res.data;
+    },
+  });
+
+  // Fetch brands
+  const { data: brands = [] } = useQuery({
+    queryKey: ["brands"],
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:5000/brands");
+      return res.data;
+    },
+  });
+
+  console.log(categories, brands);
 
   const { count } = totalCount;
   const itemsPerPage = 9;
@@ -69,8 +107,10 @@ const Home = () => {
 
   // Handle sorting change
   const handleSortChange = (e) => {
-    setSortBy(e.target.value); // Update sortBy state based on user's selection
+    setSortBy(e.target.value);
   };
+
+  // if (isLoading) return <div>Loading....</div>;
 
   return (
     <div>
@@ -82,49 +122,70 @@ const Home = () => {
           Explore the latest in Fashion on our platform.{" "}
         </p>
       </div>
-      <div className="my-3 px-4">
-        <input
-          className="input input-bordered mb-3 w-full"
-          type="text"
-          placeholder="Search by ProductName or BrandName"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
 
-      {/* Sort By Dropdown */}
-      <div className="mb-4 px-4">
-        <select
-          onChange={handleSortChange}
-          value={sortBy}
-          className="select select-bordered w-full"
-        >
-          <option value="">Sort By</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="date-desc">Newest First</option>
-        </select>
+      <div className="flex justify-between items-center flex-col md:flex-row ">
+        {/* search */}
+        <div className="my-3 px-4  w-full">
+          <input
+            className="input input-bordered  w-full"
+            type="text"
+            placeholder="Search by ProductName or BrandName"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        {/* Brand Filter */}
+        <div className="mb-3 md:my-3 px-4 w-full">
+          <select
+            onChange={(e) => setBrand(e.target.value)}
+            value={brandsData}
+            className="select select-bordered w-full"
+          >
+            <option value="">Select Brand</option>
+            <option value="">All Brands</option>
+            {brandsData.map((brand) => (
+              <option key={brand} value={brand}>
+                {brand}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Sort By Dropdown */}
+        <div className="mb-3 md:my-3 px-4  w-full">
+          <select
+            onChange={handleSortChange}
+            value={sortBy}
+            className="select select-bordered w-full"
+          >
+            <option value="">Sort By</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="date-desc">Newest First</option>
+          </select>
+        </div>
       </div>
 
       {/* price */}
-      <div className="flex flex-col lg:flex-row lg:justify-center lg:space-x-2 px-4 md:px-20 mb-4">
+      <div className="flex flex-col md:flex-row md:justify-center md:space-x-2 px-4 md:px-20 mb-4">
         <input
           type="number"
           placeholder="Min Price"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 mb-2 lg:mb-0"
+          className="input input-bordered rounded-md  mb-2 lg:mb-0"
         />
         <input
           type="number"
           placeholder="Max Price"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 mb-2 lg:mb-0"
+          className="input input-bordered rounded-md  mb-2 lg:mb-0"
         />
         <button
           onClick={handleFilter}
-          className="bg-[#0EB1EA] rounded-md text-white px-4 py-2 hover:bg-[#0EB1EA]"
+          className="bg-[#0EB1EA] rounded-md text-white btn hover:bg-[#0eafeab3] border-none"
         >
           Filter
         </button>
