@@ -68,26 +68,6 @@ const Home = () => {
     },
   });
 
-  // Fetch categories
-  const { data: categories = [] } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/categories");
-      return res.data;
-    },
-  });
-
-  // Fetch brands
-  const { data: brands = [] } = useQuery({
-    queryKey: ["brands"],
-    queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/brands");
-      return res.data;
-    },
-  });
-
-  console.log(categories, brands);
-
   const { count } = totalCount;
   const itemsPerPage = 9;
 
